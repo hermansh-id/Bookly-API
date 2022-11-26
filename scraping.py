@@ -3,10 +3,11 @@ from bs4 import BeautifulSoup
 
 class Scraping:
     
-    def __init__(self, url, page, per_page):
+    def __init__(self, url, start, per_page, draw):
         self.url = url
-        self.page = page
+        self.start = start
         self.per_page = per_page
+        self.draw = draw
     
     def get_page(self):
         page = requests.get(self.url)
@@ -51,9 +52,11 @@ class Scraping:
         return rows
     
     def paginate(self, rows):
-        start = (self.per_page * self.page)
-        if(len(rows) >= start + 1 + self.per_page):
+        start = (self.per_page * self.start)
+        if((len(rows) >= start + 1 + self.per_page) and (self.per_page != -1)):
             return rows[start:start + self.per_page]
+        elif((len(rows) >= start + 1 + self.per_page) and (self.per_page == -1)):
+            return rows[start:len(rows)]
         else:
             return rows
     
@@ -69,11 +72,12 @@ class Scraping:
             rows.append(row)
             next = self.get_last()
         
+        filteredData = self.paginate(rows)
         data = {
-            'data': [user for user in self.paginate(rows)],
-            'recordsFiltered': self.per_page,
+            'data': rows,
+            'recordsFiltered': len(filteredData),
             'recordsTotal': len(rows),
-            'draw': 1
+            'draw': self.draw
         }
         return data
         

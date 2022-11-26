@@ -15,13 +15,14 @@ def process(str):
 def main():
     web = request.args.get("web")
     title = request.args.get("title")
-    page = request.args.get('page', 1, type=int)
+    start = request.args.get('start', 1, type=int)
     length = request.args.get('length', 5, type=int)
+    draw = request.args.get('draw', type=int)
     
     if(web and title):
         if(web == 'libgen'):
             url = "https://libgen.is/search.php?req=" + process(title) + "&open=0&res=25&view=simple&phrase=1&column=title"
-            scr = Scraping(url=url, page=page, per_page=length)
+            scr = Scraping(url=url, start=start, per_page=length, draw=draw)
             list_scrap = scr.libgen()
             return list_scrap
         else:
