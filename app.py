@@ -1,13 +1,17 @@
 from flask import Flask, request
 from urllib.parse import quote
+from flask_cors import CORS, cross_origin
 from scraping import Scraping
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 def process(str):
     return quote(str)
 
 @app.route("/")
+@cross_origin()
 def main():
     web = request.args.get("web")
     title = request.args.get("title")
