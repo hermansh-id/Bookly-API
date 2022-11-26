@@ -69,13 +69,13 @@ class Scraping:
         while(next[0]):
             self.url = "https://libgen.is/"+next[1]
             row = self.scraping_libgen()
-            rows.append(row)
+            rows + row
             next = self.get_last()
         
-        filteredData = self.paginate(rows)
+        # filteredData = self.paginate(rows)
         data = {
             'data': rows,
-            'recordsFiltered': len(filteredData),
+            'recordsFiltered': len(rows),
             'recordsTotal': len(rows),
             'draw': self.draw
         }
